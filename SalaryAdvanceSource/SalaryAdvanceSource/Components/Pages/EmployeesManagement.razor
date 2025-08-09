@@ -2,14 +2,19 @@
 @using SalaryAdvanceSource.DTOs
 @using SalaryAdvanceSource.Services
 @inject IEmployeesService EmployeesService
+@rendermode InteractiveServer
+@inject NavigationManager Navigation
 
 <PageTitle>Employees Management</PageTitle>
 
 <h1>Employees Management</h1>
 
+<button class="btn btn-primary" @onclick="GetListUsers">Get List Users</button>
+<button class="btn btn-primary" @onclick="GoToAddNewUser">Add New User</button>
+
 @if (listUsers == null || listUsers.Count == 0)
 {
-    <p>No employees found.</p>
+    @* <p>No employees found.</p> *@
 }
 else
 {
@@ -43,9 +48,8 @@ else
 @code {
     private List<GetUserDto> listUsers = new();
 
-    protected override async Task OnInitializedAsync()
+    private async Task GetListUsers()
     {
-        Console.WriteLine("onclick");
         try
         {
             listUsers = await EmployeesService.GetAllUsersAsync();
@@ -54,5 +58,9 @@ else
         {
             Console.WriteLine($"Error while querying Database: {ex.Message}");
         }
+    }
+    private void GoToAddNewUser()
+    {
+        Navigation.NavigateTo("/add-new-user");
     }
 }
