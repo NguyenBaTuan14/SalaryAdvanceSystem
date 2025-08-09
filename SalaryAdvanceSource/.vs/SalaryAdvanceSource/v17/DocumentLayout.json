@@ -3,10 +3,6 @@
   "WorkspaceRootPath": "D:\\Document\\DTS-task\\Salary_Advance_System\\SalaryAdvanceSystem\\SalaryAdvanceSource\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{42392CCC-CAE5-4B64-8F02-C53CB97F980D}|SalaryAdvanceSource\\SalaryAdvanceSource.csproj|d:\\document\\dts-task\\salary_advance_system\\salaryadvancesystem\\salaryadvancesource\\salaryadvancesource\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
-      "RelativeMoniker": "D:0:0:{42392CCC-CAE5-4B64-8F02-C53CB97F980D}|SalaryAdvanceSource\\SalaryAdvanceSource.csproj|solutionrelative:salaryadvancesource\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{42392CCC-CAE5-4B64-8F02-C53CB97F980D}|SalaryAdvanceSource\\SalaryAdvanceSource.csproj|d:\\document\\dts-task\\salary_advance_system\\salaryadvancesystem\\salaryadvancesource\\salaryadvancesource\\components\\pages\\employeesmanagement.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{42392CCC-CAE5-4B64-8F02-C53CB97F980D}|SalaryAdvanceSource\\SalaryAdvanceSource.csproj|solutionrelative:salaryadvancesource\\components\\pages\\employeesmanagement.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
@@ -26,47 +22,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 409,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 2,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": ".gitignore",
-              "DocumentMoniker": "D:\\Document\\DTS-task\\Salary_Advance_System\\SalaryAdvanceSystem\\SalaryAdvanceSource\\SalaryAdvanceSource\\.gitignore",
-              "RelativeDocumentMoniker": "SalaryAdvanceSource\\.gitignore",
-              "ToolTip": "D:\\Document\\DTS-task\\Salary_Advance_System\\SalaryAdvanceSystem\\SalaryAdvanceSource\\SalaryAdvanceSource\\.gitignore",
-              "RelativeToolTip": "SalaryAdvanceSource\\.gitignore",
-              "ViewState": "AgIAABYAAAAAAAAAAAAiwCsAAAAEAAAAAAAAAA==",
-              "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAF8SURBVDhPjVNLTgJBEG1lwpoFB3GNK9fieA48hD8iwT/ihwgSDAIHgAGXXsEV18CNzL/LquqZdsYM6kteXqcy3fWqpmpNRBgOhyABBEgpAFVKPIMUcYzUyOU\u002BXM/b2qtU3vkSfRjjZTCAMAw1A2LwzdFoBPP5HNqdzuL27n4juibWI\u002BUshBA1DIkhEx9iEorFotgslQqGYbxxAGFEqt1MxmPWJLbLZdZ\u002Bv89q5PMFPiTR6z2zdaxR0fXA0XTBcVywkb4fwHXjRteecIDNQ7UmExVYAdPcxYaqclN46na5WenMKjtlVnTYwcXlVYaDqImW9beD5N/TeGy32QHXm6hZ03ZgiSQHp2fnWQ4oBmJqWSqwAqZpZjt4aLXAD4J0VqyZsmoubfB8H2r1eoaD6NXZ9HcHO\u002BSA3f4AjifXl8rItOETM8ckB9WTWpYD9RdeZ1PWVWAHWXPQaDb59f/w8LiqHeh1pvGkCaP6qB8yXusoxmuNZ7XmII4O9vGuEF86osuDYRkpYQAAAABJRU5ErkJggg==",
-              "WhenOpened": "2025-08-09T10:53:35.139Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "EmployeesManagement.razor",
-              "DocumentMoniker": "D:\\Document\\DTS-task\\Salary_Advance_System\\SalaryAdvanceSystem\\SalaryAdvanceSource\\SalaryAdvanceSource\\Components\\Pages\\EmployeesManagement.razor",
-              "RelativeDocumentMoniker": "SalaryAdvanceSource\\Components\\Pages\\EmployeesManagement.razor",
-              "ToolTip": "D:\\Document\\DTS-task\\Salary_Advance_System\\SalaryAdvanceSystem\\SalaryAdvanceSource\\SalaryAdvanceSource\\Components\\Pages\\EmployeesManagement.razor",
-              "RelativeToolTip": "SalaryAdvanceSource\\Components\\Pages\\EmployeesManagement.razor",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABwAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-08-09T08:51:18.121Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "IEmployeesService.cs",
-              "DocumentMoniker": "D:\\Document\\DTS-task\\Salary_Advance_System\\SalaryAdvanceSystem\\SalaryAdvanceSource\\SalaryAdvanceSource\\Services\\IEmployeesService.cs",
-              "RelativeDocumentMoniker": "SalaryAdvanceSource\\Services\\IEmployeesService.cs",
-              "ToolTip": "D:\\Document\\DTS-task\\Salary_Advance_System\\SalaryAdvanceSystem\\SalaryAdvanceSource\\SalaryAdvanceSource\\Services\\IEmployeesService.cs",
-              "RelativeToolTip": "SalaryAdvanceSource\\Services\\IEmployeesService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-09T08:05:38.8Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:1:0:{e8b06f52-6d01-11d2-aa7d-00c04f990343}"
@@ -77,7 +34,32 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "EmployeesManagement.razor",
+              "DocumentMoniker": "D:\\Document\\DTS-task\\Salary_Advance_System\\SalaryAdvanceSystem\\SalaryAdvanceSource\\SalaryAdvanceSource\\Components\\Pages\\EmployeesManagement.razor",
+              "RelativeDocumentMoniker": "SalaryAdvanceSource\\Components\\Pages\\EmployeesManagement.razor",
+              "ToolTip": "D:\\Document\\DTS-task\\Salary_Advance_System\\SalaryAdvanceSystem\\SalaryAdvanceSource\\SalaryAdvanceSource\\Components\\Pages\\EmployeesManagement.razor",
+              "RelativeToolTip": "SalaryAdvanceSource\\Components\\Pages\\EmployeesManagement.razor",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAAB8AAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-09T08:51:18.121Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "IEmployeesService.cs",
+              "DocumentMoniker": "D:\\Document\\DTS-task\\Salary_Advance_System\\SalaryAdvanceSystem\\SalaryAdvanceSource\\SalaryAdvanceSource\\Services\\IEmployeesService.cs",
+              "RelativeDocumentMoniker": "SalaryAdvanceSource\\Services\\IEmployeesService.cs",
+              "ToolTip": "D:\\Document\\DTS-task\\Salary_Advance_System\\SalaryAdvanceSystem\\SalaryAdvanceSource\\SalaryAdvanceSource\\Services\\IEmployeesService.cs",
+              "RelativeToolTip": "SalaryAdvanceSource\\Services\\IEmployeesService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-09T08:05:38.8Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\Document\\DTS-task\\Salary_Advance_System\\SalaryAdvanceSystem\\SalaryAdvanceSource\\SalaryAdvanceSource\\Program.cs",
               "RelativeDocumentMoniker": "SalaryAdvanceSource\\Program.cs",
@@ -85,8 +67,7 @@
               "RelativeToolTip": "SalaryAdvanceSource\\Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAABCAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-08T08:26:57.027Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-08T08:26:57.027Z"
             }
           ]
         }
