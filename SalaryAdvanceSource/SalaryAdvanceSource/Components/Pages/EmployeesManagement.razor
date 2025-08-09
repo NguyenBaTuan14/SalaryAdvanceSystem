@@ -1,0 +1,58 @@
+﻿@page "/employees-management"
+@using SalaryAdvanceSource.DTOs
+@using SalaryAdvanceSource.Services
+@inject IEmployeesService EmployeesService
+
+<PageTitle>Employees Management</PageTitle>
+
+<h1>Employees Management</h1>
+
+@if (listUsers == null || listUsers.Count == 0)
+{
+    <p>No employees found.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>UserId</th>
+                <th>UserName</th>
+                <th>FullName</th>
+                <th>Email</th>
+                <th>PhoneNumber</th>
+                <th>Role</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in listUsers)
+            {
+                <tr>
+                    <td>@user.UserId</td>
+                    <td>@user.UserName</td>
+                    <td>@user.FullName</td>
+                    <td>@user.Email</td>
+                    <td>@user.PhoneNumber</td>
+                    <td>@user.Role</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<GetUserDto> listUsers = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine("onclick");
+        try
+        {
+            listUsers = await EmployeesService.GetAllUsersAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error while querying Database: {ex.Message}");
+        }
+    }
+}

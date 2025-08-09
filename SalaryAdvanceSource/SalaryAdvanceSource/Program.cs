@@ -1,10 +1,20 @@
+using Microsoft.EntityFrameworkCore;
 using SalaryAdvanceSource.Components;
+using SalaryAdvanceSource.Data;
+using SalaryAdvanceSource.Mapping;
+using SalaryAdvanceSource.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddDbContext<Idpsalary>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")!));
+
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddScoped<IEmployeesService, EmployeesService>();
 
 var app = builder.Build();
 
