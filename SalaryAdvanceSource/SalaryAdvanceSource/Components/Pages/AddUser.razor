@@ -1,0 +1,151 @@
+﻿@page "/employees-management/add-new-user"
+@using System.ComponentModel.DataAnnotations
+@using SalaryAdvanceSource.DTOs
+@using SalaryAdvanceSource.Models
+@using SalaryAdvanceSource.Services
+@inject IDepartmentsService DepartmentsService
+@inject IEmployeesService EmployeesService
+@rendermode InteractiveServer
+
+<EditForm Model="@user" OnValidSubmit="HandleValidSubmit" FormName="UserForm">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label for="userName">Username:</label>
+        <InputText id="userName" @bind-Value="user.UserName" class="form-control" />
+        <ValidationMessage For="@(() => user.UserName)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="password">Password:</label>
+        <InputText id="password" @bind-Value="user.Password" type="password" class="form-control" />
+        <ValidationMessage For="@(() => user.Password)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="departmentId">Department:</label>
+        <InputSelect id="departmentId" @bind-Value="user.DepartmentId" class="form-control">
+            <option value="">--Chọn phòng ban--</option>
+            @foreach (var dep in listDepartments)
+            {
+                <option value="@dep.DepartmentId">@dep.DepartmentName</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => user.DepartmentId)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="fullName">Full Name:</label>
+        <InputText id="fullName" @bind-Value="user.FullName" class="form-control" />
+        <ValidationMessage For="@(() => user.FullName)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="email">Email:</label>
+        <InputText id="email" @bind-Value="user.Email" class="form-control" />
+        <ValidationMessage For="@(() => user.Email)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="phoneNumber">Phone Number:</label>
+        <InputText id="phoneNumber" @bind-Value="user.PhoneNumber" class="form-control" />
+        <ValidationMessage For="@(() => user.PhoneNumber)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="address">Address:</label>
+        <InputText id="address" @bind-Value="user.Address" class="form-control" />
+        <ValidationMessage For="@(() => user.Address)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="dob">Date Of Birth:</label>
+        <InputDate id="dob" @bind-Value="user.DateOfBirth" class="form-control" />
+        <ValidationMessage For="@(() => user.DateOfBirth)" />
+    </div>
+
+    <div class="mb-3">
+        <label>Gender:</label>
+        <InputRadioGroup @bind-Value="user.Gender" Name="gender">
+            @foreach (GenderType gender in Enum.GetValues(typeof(GenderType)))
+            {
+                <div class="form-check">
+                    <InputRadio class="form-check-input" Value="gender" />
+                    <label class="form-check-label">@gender.ToString()</label>
+                </div>
+            }
+        </InputRadioGroup>
+        <ValidationMessage For="@(() => user.Gender)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="role">Role:</label>
+        <InputSelect id="role" class="form-control" @bind-Value="user.Role">
+            @foreach (RoleType role in Enum.GetValues(typeof(RoleType)))
+            {
+                <option value="@role">@role.ToString()</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => user.Role)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="position">Position:</label>
+        <InputSelect id="position" class="form-control" @bind-Value="user.Position">
+            @foreach (PositionType position in Enum.GetValues(typeof(PositionType)))
+            {
+                <option value="@position">@position.ToString()</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => user.Position)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="onboardDate">Onboard Date:</label>
+        <InputDate id="onboardDate" @bind-Value="user.OnboardDate" class="form-control" />
+        <ValidationMessage For="@(() => user.OnboardDate)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="salary">Basic Salary:</label>
+        <InputNumber id="salary" @bind-Value="user.BasicSalary" class="form-control" />
+        <ValidationMessage For="@(() => user.BasicSalary)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Gửi</button>
+</EditForm>
+
+@code {
+    private CreateUserDto user = new();
+    private List<GetDepartmentDto> listDepartments = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetListDepartments();
+    }
+
+    private async Task GetListDepartments()
+    {
+        try
+        {
+            listDepartments = await DepartmentsService.GetAllDepartmentAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error while querying Database: {ex.Message}");
+        }
+    }
+
+    private async void HandleValidSubmit()
+    {
+        try
+        {
+            await EmployeesService.CreateUserAsync(user);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error while querying Database: {ex.Message}");
+        }
+    }
+}

@@ -15,6 +15,7 @@ builder.Services.AddDbContext<Idpsalary>(options =>
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped<IEmployeesService, EmployeesService>();
+builder.Services.AddScoped<IDepartmentsService, DepartmentsService>();
 
 var app = builder.Build();
 
