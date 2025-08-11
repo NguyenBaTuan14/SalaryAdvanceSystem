@@ -11,48 +11,65 @@
 
 <button class="btn btn-primary" @onclick="GetListUsers">Get List Users</button>
 <button class="btn btn-primary" @onclick="GoToAddNewUser">Add New User</button>
+<br /> <br />
 
-@if (listUsers == null || listUsers.Count == 0)
+@if (onclick)
 {
-    @* <p>No employees found.</p> *@
+    <div class="d-flex justify-content-center align-items-center" style="height: 30vh;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <span class="ms-2">Loading users...</span>
+    </div>
 }
 else
 {
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>UserId</th>
-                <th>UserName</th>
-                <th>FullName</th>
-                <th>Email</th>
-                <th>PhoneNumber</th>
-                <th>Role</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var user in listUsers)
-            {
+    @if (listUsers != null && listUsers.Count > 0)
+    {
+        <table class="table table-striped">
+            <thead>
                 <tr>
-                    <td>@user.UserId</td>
-                    <td>@user.UserName</td>
-                    <td>@user.FullName</td>
-                    <td>@user.Email</td>
-                    <td>@user.PhoneNumber</td>
-                    <td>@user.Role</td>
+                    <th>UserId</th>
+                    <th>UserName</th>
+                    <th>FullName</th>
+                    <th>Email</th>
+                    <th>PhoneNumber</th>
+                    <th>Role</th>
+                    <th>Action</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var user in listUsers)
+                {
+                    <tr>
+                        <td>@user.UserId</td>
+                        <td>@user.UserName</td>
+                        <td>@user.FullName</td>
+                        <td>@user.Email</td>
+                        <td>@user.PhoneNumber</td>
+                        <td>@user.Role</td>
+                        <td>
+                            <button class="btn btn-danger" @onclick="GoToDelete">Delete</button>
+                            <button class="btn btn-warning" @onclick="() => GotoEdit(user.UserId)">Edit</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
 }
 
 @code {
     private List<GetUserDto> listUsers = new();
+    private bool onclick = false;
 
     private async Task GetListUsers()
     {
+        onclick = true;
         try
         {
             listUsers = await EmployeesService.GetAllUsersAsync();
+            onclick = false;
         }
         catch (Exception ex)
         {
@@ -61,6 +78,14 @@ else
     }
     private void GoToAddNewUser()
     {
-        Navigation.NavigateTo("/add-new-user");
+        Navigation.NavigateTo("/employees-management/add-new-user");
+    }
+    private void GoToDelete()
+    {
+        Navigation.NavigateTo("/employees-management/delete");
+    }
+    private void GotoEdit(Guid userId)
+    {
+        Navigation.NavigateTo($"/employees-management/edit-user/{userId}");
     }
 }

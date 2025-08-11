@@ -9,6 +9,7 @@ namespace SalaryAdvanceSource.Mapping
         public MappingProfile() 
         {
             CreateMap<Users, GetUserDto>();
+            CreateMap<Departments, GetDepartmentDto>();
         }
     }
 }

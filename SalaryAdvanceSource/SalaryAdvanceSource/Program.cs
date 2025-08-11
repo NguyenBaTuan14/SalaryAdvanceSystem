@@ -32,10 +32,14 @@ builder.Services.AddServerSideBlazor()
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped<IEmployeesService, EmployeesService>();
+
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped< AuthService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<UserState>();
+
+builder.Services.AddScoped<IDepartmentsService, DepartmentsService>();
+
 
 var app = builder.Build();
 
