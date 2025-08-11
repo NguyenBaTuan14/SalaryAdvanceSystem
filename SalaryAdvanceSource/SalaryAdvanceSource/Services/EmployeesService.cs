@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SalaryAdvanceSource.Data;
 using SalaryAdvanceSource.DTOs;
+using SalaryAdvanceSource.Exceptions;
 using SalaryAdvanceSource.Models;
 
 namespace SalaryAdvanceSource.Services
@@ -28,6 +29,10 @@ namespace SalaryAdvanceSource.Services
         }
         public async Task CreateUserAsync(CreateUserDto userDto)
         {
+            var users = await _context.Users.ToListAsync();
+            if (users.Any(u => u.UserName == userDto.UserName))
+                throw new BusinessException("Username already exists");
+
             userDto.DateOfBirth = DateTime.SpecifyKind(userDto.DateOfBirth, DateTimeKind.Utc);
             userDto.OnboardDate = DateTime.SpecifyKind(userDto.OnboardDate, DateTimeKind.Utc);
 
@@ -58,7 +63,7 @@ namespace SalaryAdvanceSource.Services
                 .FirstOrDefaultAsync(u => u.UserId == userId);
             return _mapper.Map<CreateUserDto>(user);
         }
-        public async Task UpdateUserAsync(CreateUserDto userUpdate, Guid id, bool isActive)
+        public async Task UpdateUserAsync(CreateUserDto userUpdate, Guid id)
         {
             userUpdate.DateOfBirth = DateTime.SpecifyKind(userUpdate.DateOfBirth, DateTimeKind.Utc);
             userUpdate.OnboardDate = DateTime.SpecifyKind(userUpdate.OnboardDate, DateTimeKind.Utc);
@@ -67,12 +72,6 @@ namespace SalaryAdvanceSource.Services
             if (user == null)
                 throw new Exception("User doesn't exist");
 
-            user.SetFullName(userUpdate.FullName);
-            user.SetEmail(userUpdate.Email);
-            user.SetPhoneNumber(userUpdate.PhoneNumber);
-            user.SetAddress(userUpdate.Address);
-            user.SetDateOfBirth(userUpdate.DateOfBirth);
-            user.SetGender(userUpdate.Gender);
             user.SetRole(userUpdate.Role);
             user.SetPosition(userUpdate.Position);
             user.SetDepartmentId(userUpdate.DepartmentId);
@@ -81,7 +80,7 @@ namespace SalaryAdvanceSource.Services
             user.SetManagerId(department!.ManagerId);
             user.SetOnboardDate(userUpdate.OnboardDate);
             user.SetBasicSalary(userUpdate.BasicSalary);
-            user.SetIsActive(isActive);
+            user.SetIsActive(userUpdate.IsActive);
 
             if (!string.IsNullOrWhiteSpace(userUpdate.Password))
             {
@@ -90,6 +89,13 @@ namespace SalaryAdvanceSource.Services
 
             await _context.SaveChangesAsync();
         }
-
+        public async Task DeleteUserAsync(Guid userId)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+            if (user == null)
+                throw new BusinessException("User doesn't exist");
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+        }   
     }
 }

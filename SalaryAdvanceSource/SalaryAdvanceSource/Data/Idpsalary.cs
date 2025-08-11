@@ -10,5 +10,7 @@ namespace SalaryAdvanceSource.Data
         public DbSet<SalaryAdvanceSource.Models.Users> Users { get; set; } = null!;
         public DbSet<SalaryAdvanceSource.Models.Departments> Departments { get; set; } = null!;
         public DbSet<SalaryAdvanceSource.Models.SalaryAdvanceRequests> SalaryAdvanceRequests { get; set; } = null!;
+        public DbSet<SalaryAdvanceSource.Models.SalaryLimits> SalaryLimits { get; set; } = null!;
+        public DbSet<SalaryAdvanceSource.Models.SalaryLimitDetails> SalaryLimitDetails { get; set; } = null!;
     }
 }

@@ -1,11 +1,13 @@
 ﻿@page "/employees-management/edit-user/{id:guid}"
 @using System.ComponentModel.DataAnnotations
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
 @using SalaryAdvanceSource.DTOs
 @using SalaryAdvanceSource.Models
 @using SalaryAdvanceSource.Services
 @inject IDepartmentsService DepartmentsService
 @inject IEmployeesService EmployeesService
 @rendermode InteractiveServer
+@inject NavigationManager Navigation
 
 <EditForm Model="@user" OnValidSubmit="HandleValidSubmit" FormName="UserForm">
     <DataAnnotationsValidator />
@@ -19,7 +21,7 @@
 
     <div class="mb-3">
         <label for="departmentId">Department:</label>
-        <InputSelect id="departmentId" @bind-Value="user.DepartmentId" class="form-control">
+        <InputSelect id="departmentId" @bind-Value="user.DepartmentId" class="form-control" disabled>
             <option value="">--Chọn phòng ban--</option>
             @foreach (var dep in listDepartments)
             {
@@ -31,31 +33,31 @@
 
     <div class="mb-3">
         <label for="fullName">Full Name:</label>
-        <InputText id="fullName" @bind-Value="user.FullName" class="form-control" />
+        <InputText id="fullName" @bind-Value="user.FullName" class="form-control" disabled />
         <ValidationMessage For="@(() => user.FullName)" />
     </div>
 
     <div class="mb-3">
         <label for="email">Email:</label>
-        <InputText id="email" @bind-Value="user.Email" class="form-control" />
+        <InputText id="email" @bind-Value="user.Email" class="form-control" disabled />
         <ValidationMessage For="@(() => user.Email)" />
     </div>
 
     <div class="mb-3">
         <label for="phoneNumber">Phone Number:</label>
-        <InputText id="phoneNumber" @bind-Value="user.PhoneNumber" class="form-control" />
+        <InputText id="phoneNumber" @bind-Value="user.PhoneNumber" class="form-control" disabled />
         <ValidationMessage For="@(() => user.PhoneNumber)" />
     </div>
 
     <div class="mb-3">
         <label for="address">Address:</label>
-        <InputText id="address" @bind-Value="user.Address" class="form-control" />
+        <InputText id="address" @bind-Value="user.Address" class="form-control" disabled />
         <ValidationMessage For="@(() => user.Address)" />
     </div>
 
     <div class="mb-3">
         <label for="dob">Date Of Birth:</label>
-        <InputDate id="dob" @bind-Value="user.DateOfBirth" class="form-control" />
+        <InputDate id="dob" @bind-Value="user.DateOfBirth" class="form-control" disabled />
         <ValidationMessage For="@(() => user.DateOfBirth)" />
     </div>
 
@@ -65,7 +67,7 @@
             @foreach (GenderType gender in Enum.GetValues(typeof(GenderType)))
             {
                 <div class="form-check">
-                    <InputRadio class="form-check-input" Value="gender" />
+                    <InputRadio class="form-check-input" Value="gender" disabled />
                     <label class="form-check-label">@gender.ToString()</label>
                 </div>
             }
@@ -97,19 +99,19 @@
 
     <div class="mb-3">
         <label for="onboardDate">Onboard Date:</label>
-        <InputDate id="onboardDate" @bind-Value="user.OnboardDate" class="form-control" />
+        <InputDate id="onboardDate" @bind-Value="user.OnboardDate" class="form-control"/>
         <ValidationMessage For="@(() => user.OnboardDate)" />
     </div>
 
     <div class="mb-3">
         <label for="salary">Basic Salary:</label>
-        <InputNumber id="salary" @bind-Value="user.BasicSalary" class="form-control" />
+        <InputNumber id="salary" @bind-Value="user.BasicSalary" class="form-control"/>
         <ValidationMessage For="@(() => user.BasicSalary)" />
     </div>
 
     <div class="mb-3">
         <label>Active:</label>
-        <InputRadioGroup @bind-Value="isActive" Name="active">
+        <InputRadioGroup @bind-Value="user.IsActive" Name="active">
             <div class="form-check">
                 <InputRadio class="form-check-input" Value="true" />
                 <label class="form-check-label">True</label>
@@ -119,10 +121,12 @@
                 <label class="form-check-label">False</label>
             </div>
         </InputRadioGroup>
-        <ValidationMessage For="@(() => isActive)" />
+        <ValidationMessage For="@(() => user.IsActive)" />
     </div>
 
     <button type="submit" class="btn btn-primary">Cập nhật</button>
+    <button type="button" class="btn btn-secondary" @onclick="() => Navigation.NavigateTo(backUrl)">Huỷ</button>
+
 </EditForm>
 
 @code {
@@ -131,7 +135,7 @@
 
     private CreateUserDto user = new();
     private List<GetDepartmentDto> listDepartments = new();
-    private bool isActive = true;
+    private string backUrl = "/employees-management";
 
     protected override async Task OnInitializedAsync()
     {
@@ -167,7 +171,8 @@
     {
         try
         {
-            await EmployeesService.UpdateUserAsync(user, id, isActive);
+            await EmployeesService.UpdateUserAsync(user, id);
+            Navigation.NavigateTo("/employees-management");
         }
         catch (Exception ex)
         {

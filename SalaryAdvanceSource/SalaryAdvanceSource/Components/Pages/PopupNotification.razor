@@ -1,0 +1,65 @@
+﻿<div class="@ModalClass">
+    <div class="modal-overlay" @onclick="Close"></div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5>@Title</h5>
+        </div>
+        <div class="modal-body">
+            @Message
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" @onclick="Close">OK</button>
+        </div>
+    </div>
+</div>
+
+<style>
+    .modal.hide {
+        display: none;
+    }
+
+    .modal.show {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 1050;
+    }
+
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+        background: white;
+        max-width: 400px;
+        margin: 15% auto;
+        padding: 20px;
+        border-radius: 8px;
+        z-index: 1060;
+        text-align: center;
+    }
+</style>
+
+@code {
+    [Parameter] public string Title { get; set; } = "Notification";
+    [Parameter] public string Message { get; set; } = string.Empty;
+
+    private bool IsVisible { get; set; }
+    private string ModalClass => IsVisible ? "modal show" : "modal hide";
+
+    public void Show(string message)
+    {
+        Console.WriteLine($"Showing notification: {message}");
+        Message = message;
+        IsVisible = true;
+        StateHasChanged();
+    }
+
+    public void Close()
+    {
+        IsVisible = false;
+        StateHasChanged();
+    }
+}

@@ -1,11 +1,16 @@
 ﻿@page "/employees-management/add-new-user"
 @using System.ComponentModel.DataAnnotations
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
 @using SalaryAdvanceSource.DTOs
+@using SalaryAdvanceSource.Exceptions
 @using SalaryAdvanceSource.Models
 @using SalaryAdvanceSource.Services
 @inject IDepartmentsService DepartmentsService
 @inject IEmployeesService EmployeesService
 @rendermode InteractiveServer
+@inject NavigationManager Navigation
+
+<h3>Add New User</h3>
 
 <EditForm Model="@user" OnValidSubmit="HandleValidSubmit" FormName="UserForm">
     <DataAnnotationsValidator />
@@ -114,11 +119,17 @@
     </div>
 
     <button type="submit" class="btn btn-primary">Gửi</button>
+    <button type="button" class="btn btn-secondary" @onclick="() => Navigation.NavigateTo(backUrl)">Huỷ</button>
+
 </EditForm>
+
+<PopupNotification @ref="notificationModal" Title="Notification" />
 
 @code {
     private CreateUserDto user = new();
     private List<GetDepartmentDto> listDepartments = new();
+    private PopupNotification notificationModal = null!;
+    private string backUrl = "/employees-management";
 
     protected override async Task OnInitializedAsync()
     {
@@ -142,6 +153,11 @@
         try
         {
             await EmployeesService.CreateUserAsync(user);
+            Navigation.NavigateTo("/employees-management");
+        }
+        catch (BusinessException ex)
+        {
+            notificationModal.Show(ex.Message);
         }
         catch (Exception ex)
         {

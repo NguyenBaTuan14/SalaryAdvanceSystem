@@ -8,7 +8,7 @@ namespace SalaryAdvanceSource.Services
         Task<GetUserDto> GetManagerAsync(Guid managerId);
         Task CreateUserAsync(CreateUserDto userDto);
         Task<CreateUserDto> GetUserByIdAsync(Guid userId);
-        Task UpdateUserAsync(CreateUserDto userUpdate, Guid id, bool isActive);
-        //Task<List<GetUserDto>> GetAllManagersAsync();
+        Task UpdateUserAsync(CreateUserDto userUpdate, Guid id);
+        Task DeleteUserAsync(Guid userId);
     }
 }
