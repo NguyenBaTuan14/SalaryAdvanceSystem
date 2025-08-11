@@ -111,7 +111,7 @@ namespace SalaryAdvanceSource.Models
         {
             if (dateOfBirth == default)
                 throw new ArgumentException("Date of birth cannot be default value.", nameof(dateOfBirth));
-            DateOfBirth = dateOfBirth;
+            DateOfBirth = DateTime.SpecifyKind(dateOfBirth, DateTimeKind.Utc);
         }
         public void SetGender(GenderType gender)
         {
@@ -135,7 +135,7 @@ namespace SalaryAdvanceSource.Models
         {
             if (onboardDate == default)
                 throw new ArgumentException("Onboard date cannot be default value.", nameof(onboardDate));
-            OnboardDate = onboardDate;
+            OnboardDate = DateTime.SpecifyKind(onboardDate, DateTimeKind.Utc);
         }
         public void SetBasicSalary(decimal basicSalary)
         {
