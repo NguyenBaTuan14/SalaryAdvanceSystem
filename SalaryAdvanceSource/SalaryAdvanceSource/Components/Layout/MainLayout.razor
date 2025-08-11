@@ -1,18 +1,13 @@
 ﻿@inherits LayoutComponentBase
 
-@inject AuthenticationStateProvider AuthStateProvider
-@inject ILoginService LoginService
-@inject UserState UserState
 <div class="page">
     <div class="sidebar">
         <NavMenu />
     </div>
 
     <main>
-        
         <div class="top-row px-4">
-      
-            <NavLink class="btn btn-link" href="/profile"> <p> @(UserState.CurrentUser != null ? UserState.CurrentUser.FullName : "Guest")</p></NavLink>
+            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
         </div>
 
         <article class="content px-4">
@@ -26,18 +21,3 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
-
-
-@code {
-    
-    protected override async Task OnInitializedAsync()
-    {
-        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
-        var username = authState.User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value;
-
-        if (!string.IsNullOrEmpty(username))
-        {
-            UserState.CurrentUser = await LoginService.GetUserByUsernameAsync(username);
-        }
-    }
-}

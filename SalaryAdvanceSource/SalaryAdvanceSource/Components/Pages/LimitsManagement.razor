@@ -1,0 +1,20 @@
+﻿@page "/limits-management"
+@inject NavigationManager Navigation
+
+<PageTitle>Limit Management</PageTitle>
+
+<h1>Limit Management</h1>
+
+<button class="btn btn-primary" @onclick="GetListLimits">Get List Limits</button>
+<button class="btn btn-primary" @onclick="GoToAddNewLimit">Add New Limit</button>
+<br /><br />
+
+@code {
+    private void GetListLimits()
+    {
+    }
+    private void GoToAddNewLimit()
+    {
+        Navigation.NavigateTo("/limits-management/add-new-limit");
+    }
+}

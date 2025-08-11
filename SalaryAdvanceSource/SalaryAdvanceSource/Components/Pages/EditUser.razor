@@ -1,0 +1,182 @@
+﻿@page "/employees-management/edit-user/{id:guid}"
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@using SalaryAdvanceSource.DTOs
+@using SalaryAdvanceSource.Models
+@using SalaryAdvanceSource.Services
+@inject IDepartmentsService DepartmentsService
+@inject IEmployeesService EmployeesService
+@rendermode InteractiveServer
+@inject NavigationManager Navigation
+
+<EditForm Model="@user" OnValidSubmit="HandleValidSubmit" FormName="UserForm">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label for="userName">Username:</label>
+        <InputText id="userName" @bind-Value="user.UserName" class="form-control" disabled />
+        <ValidationMessage For="@(() => user.UserName)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="departmentId">Department:</label>
+        <InputSelect id="departmentId" @bind-Value="user.DepartmentId" class="form-control" disabled>
+            <option value="">--Chọn phòng ban--</option>
+            @foreach (var dep in listDepartments)
+            {
+                <option value="@dep.DepartmentId">@dep.DepartmentName</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => user.DepartmentId)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="fullName">Full Name:</label>
+        <InputText id="fullName" @bind-Value="user.FullName" class="form-control" disabled />
+        <ValidationMessage For="@(() => user.FullName)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="email">Email:</label>
+        <InputText id="email" @bind-Value="user.Email" class="form-control" disabled />
+        <ValidationMessage For="@(() => user.Email)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="phoneNumber">Phone Number:</label>
+        <InputText id="phoneNumber" @bind-Value="user.PhoneNumber" class="form-control" disabled />
+        <ValidationMessage For="@(() => user.PhoneNumber)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="address">Address:</label>
+        <InputText id="address" @bind-Value="user.Address" class="form-control" disabled />
+        <ValidationMessage For="@(() => user.Address)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="dob">Date Of Birth:</label>
+        <InputDate id="dob" @bind-Value="user.DateOfBirth" class="form-control" disabled />
+        <ValidationMessage For="@(() => user.DateOfBirth)" />
+    </div>
+
+    <div class="mb-3">
+        <label>Gender:</label>
+        <InputRadioGroup @bind-Value="user.Gender" Name="gender">
+            @foreach (GenderType gender in Enum.GetValues(typeof(GenderType)))
+            {
+                <div class="form-check">
+                    <InputRadio class="form-check-input" Value="gender" disabled />
+                    <label class="form-check-label">@gender.ToString()</label>
+                </div>
+            }
+        </InputRadioGroup>
+        <ValidationMessage For="@(() => user.Gender)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="role">Role:</label>
+        <InputSelect id="role" class="form-control" @bind-Value="user.Role">
+            @foreach (RoleType role in Enum.GetValues(typeof(RoleType)))
+            {
+                <option value="@role">@role.ToString()</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => user.Role)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="position">Position:</label>
+        <InputSelect id="position" class="form-control" @bind-Value="user.Position">
+            @foreach (PositionType position in Enum.GetValues(typeof(PositionType)))
+            {
+                <option value="@position">@position.ToString()</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => user.Position)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="onboardDate">Onboard Date:</label>
+        <InputDate id="onboardDate" @bind-Value="user.OnboardDate" class="form-control"/>
+        <ValidationMessage For="@(() => user.OnboardDate)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="salary">Basic Salary:</label>
+        <InputNumber id="salary" @bind-Value="user.BasicSalary" class="form-control"/>
+        <ValidationMessage For="@(() => user.BasicSalary)" />
+    </div>
+
+    <div class="mb-3">
+        <label>Active:</label>
+        <InputRadioGroup @bind-Value="user.IsActive" Name="active">
+            <div class="form-check">
+                <InputRadio class="form-check-input" Value="true" />
+                <label class="form-check-label">True</label>
+            </div>
+            <div class="form-check">
+                <InputRadio class="form-check-input" Value="false" />
+                <label class="form-check-label">False</label>
+            </div>
+        </InputRadioGroup>
+        <ValidationMessage For="@(() => user.IsActive)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Cập nhật</button>
+    <button type="button" class="btn btn-secondary" @onclick="() => Navigation.NavigateTo(backUrl)">Huỷ</button>
+
+</EditForm>
+
+@code {
+    [Parameter]
+    public Guid id { get; set; }
+
+    private CreateUserDto user = new();
+    private List<GetDepartmentDto> listDepartments = new();
+    private string backUrl = "/employees-management";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetListDepartments();
+        await LoadUser();
+    }
+
+    private async Task GetListDepartments()
+    {
+        try
+        {
+            listDepartments = await DepartmentsService.GetAllDepartmentAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error while querying departments: {ex.Message}");
+        }
+    }
+
+    private async Task LoadUser()
+    {
+        try
+        {
+            user = await EmployeesService.GetUserByIdAsync(id);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error while loading user: {ex.Message}");
+        }
+    }
+
+    private async void HandleValidSubmit()
+    {
+        try
+        {
+            await EmployeesService.UpdateUserAsync(user, id);
+            Navigation.NavigateTo("/employees-management");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error while updating user: {ex.Message}");
+        }
+    }
+}
