@@ -12,3 +12,4 @@ namespace SalaryAdvanceSource.DTOs
         public string ConfirmNewPassword { get; set; }
     }
 }
+
