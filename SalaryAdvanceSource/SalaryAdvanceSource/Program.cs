@@ -12,6 +12,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie(options =>
     {
         options.LoginPath = "/login"; // nếu chưa login thì redirect về /login
+        options.AccessDeniedPath = "/403";  // Trang khi bị chặn quyền
     });
 
 builder.Services.AddAuthorization();
@@ -24,8 +25,8 @@ builder.Services.AddAntiforgery(); // đăng ký service
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddServerSideBlazor();
 
+builder.Services.AddAuthorizationCore();
 builder.Services.AddDbContext<Idpsalary>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")!));
 
@@ -57,11 +58,12 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.MapControllers();
-app.UseAuthentication();
-app.UseAuthorization();
-app.UseAntiforgery();
-app.MapRazorComponents<App>()
+
+app.UseAuthentication();  // Authentication phải đứng trước Authorization
+app.UseAuthorization();   // Authorization sau Authentication
+app.UseAntiforgery();     // Nếu dùng antiforgery cho API POST
+
+app.MapControllers(); app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 app.Run();
