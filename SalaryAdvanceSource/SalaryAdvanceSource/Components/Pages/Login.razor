@@ -1,0 +1,140 @@
+﻿﻿
+@page "/login"
+@layout EmptyLayout
+@inject NavigationManager Navigation
+
+@code {
+    private string username;
+    private string password;
+    private string errorMessage;
+    private bool checkInput= true;
+
+    protected override void OnInitialized()
+    {
+        var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
+        if (Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query).ContainsKey("error"))
+        {
+            errorMessage = "Sai tên đăng nhập hoặc mật khẩu.";
+        }
+    }
+
+    private void DoLogin()
+    {
+        var form = new Dictionary<string, string>
+        {
+            { "username", username },
+            { "password", password }
+        };
+
+        // Gửi form qua POST
+        var target = "/account/login";
+        Navigation.NavigateTo(target, forceLoad: true);
+    }
+    public void check()
+    {
+        if(username != "" && password != "")
+        {
+            checkInput = false;
+        }
+        else
+        {
+            checkInput = true;
+        }
+    }
+}
+
+<div class="login-page">
+    <div class="login-left">
+        <img src="https://st.quantrimang.com/photos/image/2021/02/04/Hinh-nen-Quoc-Ky-VN-9.jpg" alt="Illustration" />
+    </div>
+    <div class="login-right">
+        <h1>Sign in Salary Advance System</h1>
+        <p>Sign in to your account</p>
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert alert-danger">@errorMessage</div>
+        }
+
+        <form method="post" action="/account/login">
+            <div class="form-group">
+                <label>User Name <span class="text-danger">*</span></label>
+                <input class="form-control" name="username" placeholder="Enter your Login ID" @bind="username" @bind:event="oninput" />
+            </div>
+
+            <div class="form-group">
+                <label>Password <span class="text-danger">*</span></label>
+                <input type="password" class="form-control" name="password" placeholder="Enter your password" @bind="password" @bind:event="oninput" />
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">
+                Sign in Salary Advance System
+            </button>
+        </form>
+
+        
+    </div>
+</div>
+
+<style>
+    .login-page {
+        margin: 0;
+        padding: 0;
+        
+        display: flex;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    .login-left {
+        flex: 1;
+        background-color: #f5f5f5;
+    }
+
+    .login-left img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .login-right {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 40px;
+        background-color: white;
+    }
+
+        .login-right h1 {
+            margin-bottom: 10px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .login-right p {
+            margin-bottom: 20px;
+            color: #666;
+        }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    .lang-select {
+        margin-top: 20px;
+        font-size: 14px;
+        color: #555;
+        cursor: pointer;
+    }
+
+    .arrow {
+        font-size: 10px;
+    }
+</style>
