@@ -5,16 +5,20 @@ using SalaryAdvanceSource.DTOs;
 using SalaryAdvanceSource.Exceptions;
 using SalaryAdvanceSource.Models;
 
+using Microsoft.AspNetCore.Components.Authorization;
+
 namespace SalaryAdvanceSource.Services
 {
     public class EmployeesService : IEmployeesService
     {
         private readonly Idpsalary _context;
         private readonly IMapper _mapper;
-        public EmployeesService(Idpsalary context, IMapper mapper)
+        private readonly AuthenticationStateProvider _authStateProvider;
+        public EmployeesService(Idpsalary context, IMapper mapper, AuthenticationStateProvider authStateProvider)
         {
             _context = context;
             _mapper = mapper;
+            _authStateProvider = authStateProvider;
         }
         public async Task<List<GetUserDto>> GetAllUsersAsync()
         {
@@ -29,6 +33,9 @@ namespace SalaryAdvanceSource.Services
         }
         public async Task CreateUserAsync(CreateUserDto userDto)
         {
+            var authState = await _authStateProvider.GetAuthenticationStateAsync();
+            var userId = authState.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
             var users = await _context.Users.ToListAsync();
             if (users.Any(u => u.UserName == userDto.UserName))
                 throw new BusinessException("Username already exists");
@@ -36,7 +43,7 @@ namespace SalaryAdvanceSource.Services
             userDto.DateOfBirth = DateTime.SpecifyKind(userDto.DateOfBirth, DateTimeKind.Utc);
             userDto.OnboardDate = DateTime.SpecifyKind(userDto.OnboardDate, DateTimeKind.Utc);
 
-            var user = new Users(userDto.UserName, userDto.Password, Guid.Parse("9a754549-bad4-4f03-9bb1-6bb92ca98f00"));
+            var user = new Users(userDto.UserName, userDto.Password, Guid.Parse(userId!));
 
             user.SetFullName(userDto.FullName);
             user.SetEmail(userDto.Email);
@@ -81,11 +88,6 @@ namespace SalaryAdvanceSource.Services
             user.SetOnboardDate(userUpdate.OnboardDate);
             user.SetBasicSalary(userUpdate.BasicSalary);
             user.SetIsActive(userUpdate.IsActive);
-
-            if (!string.IsNullOrWhiteSpace(userUpdate.Password))
-            {
-                user.SetPassword(userUpdate.Password);
-            }
 
             await _context.SaveChangesAsync();
         }

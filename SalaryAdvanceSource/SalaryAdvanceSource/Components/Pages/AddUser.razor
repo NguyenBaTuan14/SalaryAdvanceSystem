@@ -10,120 +10,126 @@
 @rendermode InteractiveServer
 @inject NavigationManager Navigation
 
-<h3>Add New User</h3>
+<h3 class="mb-4">Add New User</h3>
 
-<EditForm Model="@user" OnValidSubmit="HandleValidSubmit" FormName="UserForm">
+<EditForm Model="@user" OnValidSubmit="HandleValidSubmit" FormName="UserForm" class="p-3 border rounded bg-light">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
-    <div class="mb-3">
-        <label for="userName">Username:</label>
-        <InputText id="userName" @bind-Value="user.UserName" class="form-control" />
-        <ValidationMessage For="@(() => user.UserName)" />
-    </div>
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label for="userName" class="form-label">Username</label>
+            <InputText id="userName" @bind-Value="user.UserName" class="form-control form-control-sm" />
+            <ValidationMessage For="@(() => user.UserName)" class="text-danger small" />
+        </div>
 
-    <div class="mb-3">
-        <label for="password">Password:</label>
-        <InputText id="password" @bind-Value="user.Password" type="password" class="form-control" />
-        <ValidationMessage For="@(() => user.Password)" />
-    </div>
+        <div class="col-md-6">
+            <label for="password" class="form-label">Password</label>
+            <InputText id="password" @bind-Value="user.Password" type="password" class="form-control form-control-sm" />
+            <ValidationMessage For="@(() => user.Password)" class="text-danger small" />
+        </div>
 
-    <div class="mb-3">
-        <label for="departmentId">Department:</label>
-        <InputSelect id="departmentId" @bind-Value="user.DepartmentId" class="form-control">
-            <option value="">--Chọn phòng ban--</option>
-            @foreach (var dep in listDepartments)
-            {
-                <option value="@dep.DepartmentId">@dep.DepartmentName</option>
-            }
-        </InputSelect>
-        <ValidationMessage For="@(() => user.DepartmentId)" />
-    </div>
+        <div class="col-md-6">
+            <label for="departmentId" class="form-label">Department</label>
+            <InputSelect id="departmentId" @bind-Value="user.DepartmentId" class="form-select form-select-sm">
+                <option value="">--Chọn phòng ban--</option>
+                @foreach (var dep in listDepartments)
+                {
+                    <option value="@dep.DepartmentId">@dep.DepartmentName</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => user.DepartmentId)" class="text-danger small" />
+        </div>
 
-    <div class="mb-3">
-        <label for="fullName">Full Name:</label>
-        <InputText id="fullName" @bind-Value="user.FullName" class="form-control" />
-        <ValidationMessage For="@(() => user.FullName)" />
-    </div>
+        <div class="col-md-6">
+            <label for="fullName" class="form-label">Full Name</label>
+            <InputText id="fullName" @bind-Value="user.FullName" class="form-control form-control-sm" />
+            <ValidationMessage For="@(() => user.FullName)" class="text-danger small" />
+        </div>
 
-    <div class="mb-3">
-        <label for="email">Email:</label>
-        <InputText id="email" @bind-Value="user.Email" class="form-control" />
-        <ValidationMessage For="@(() => user.Email)" />
-    </div>
+        <div class="col-md-6">
+            <label for="email" class="form-label">Email</label>
+            <InputText id="email" @bind-Value="user.Email" class="form-control form-control-sm" />
+            <ValidationMessage For="@(() => user.Email)" class="text-danger small" />
+        </div>
 
-    <div class="mb-3">
-        <label for="phoneNumber">Phone Number:</label>
-        <InputText id="phoneNumber" @bind-Value="user.PhoneNumber" class="form-control" />
-        <ValidationMessage For="@(() => user.PhoneNumber)" />
-    </div>
+        <div class="col-md-6">
+            <label for="phoneNumber" class="form-label">Phone</label>
+            <InputText id="phoneNumber" @bind-Value="user.PhoneNumber" class="form-control form-control-sm" />
+            <ValidationMessage For="@(() => user.PhoneNumber)" class="text-danger small" />
+        </div>
 
-    <div class="mb-3">
-        <label for="address">Address:</label>
-        <InputText id="address" @bind-Value="user.Address" class="form-control" />
-        <ValidationMessage For="@(() => user.Address)" />
-    </div>
+        <div class="col-md-6">
+            <label for="address" class="form-label">Address</label>
+            <InputText id="address" @bind-Value="user.Address" class="form-control form-control-sm" />
+            <ValidationMessage For="@(() => user.Address)" class="text-danger small" />
+        </div>
 
-    <div class="mb-3">
-        <label for="dob">Date Of Birth:</label>
-        <InputDate id="dob" @bind-Value="user.DateOfBirth" class="form-control" />
-        <ValidationMessage For="@(() => user.DateOfBirth)" />
-    </div>
+        <div class="col-md-6">
+            <label for="dob" class="form-label">Date Of Birth</label>
+            <InputDate id="dob" @bind-Value="user.DateOfBirth" class="form-control form-control-sm" />
+            <ValidationMessage For="@(() => user.DateOfBirth)" class="text-danger small" />
+        </div>
 
-    <div class="mb-3">
-        <label>Gender:</label>
-        <InputRadioGroup @bind-Value="user.Gender" Name="gender">
-            @foreach (GenderType gender in Enum.GetValues(typeof(GenderType)))
-            {
-                <div class="form-check">
-                    <InputRadio class="form-check-input" Value="gender" />
-                    <label class="form-check-label">@gender.ToString()</label>
+        <div class="col-md-6">
+            <label class="form-label d-block">Gender</label>
+            <InputRadioGroup @bind-Value="user.Gender" Name="gender">
+                <div class="d-flex gap-3">
+                    @foreach (GenderType gender in Enum.GetValues(typeof(GenderType)))
+                    {
+                        <div class="form-check form-check-inline">
+                            <InputRadio class="form-check-input" Value="@gender" />
+                            <label class="form-check-label">@gender</label>
+                        </div>
+                    }
                 </div>
-            }
-        </InputRadioGroup>
-        <ValidationMessage For="@(() => user.Gender)" />
+            </InputRadioGroup>
+            <ValidationMessage For="@(() => user.Gender)" class="text-danger small" />
+        </div>
+
+        <div class="col-md-6">
+            <label for="role" class="form-label">Role</label>
+            <InputSelect id="role" class="form-select form-select-sm" @bind-Value="user.Role">
+                @foreach (RoleType role in Enum.GetValues(typeof(RoleType)))
+                {
+                    <option value="@role">@role</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => user.Role)" class="text-danger small" />
+        </div>
+
+        <div class="col-md-6">
+            <label for="position" class="form-label">Position</label>
+            <InputSelect id="position" class="form-select form-select-sm" @bind-Value="user.Position">
+                @foreach (PositionType position in Enum.GetValues(typeof(PositionType)))
+                {
+                    <option value="@position">@position</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => user.Position)" class="text-danger small" />
+        </div>
+
+        <div class="col-md-6">
+            <label for="onboardDate" class="form-label">Onboard Date</label>
+            <InputDate id="onboardDate" @bind-Value="user.OnboardDate" class="form-control form-control-sm" />
+            <ValidationMessage For="@(() => user.OnboardDate)" class="text-danger small" />
+        </div>
+
+        <div class="col-md-6">
+            <label for="salary" class="form-label">Basic Salary</label>
+            <InputNumber id="salary" @bind-Value="user.BasicSalary" class="form-control form-control-sm" />
+            <ValidationMessage For="@(() => user.BasicSalary)" class="text-danger small" />
+        </div>
     </div>
 
-    <div class="mb-3">
-        <label for="role">Role:</label>
-        <InputSelect id="role" class="form-control" @bind-Value="user.Role">
-            @foreach (RoleType role in Enum.GetValues(typeof(RoleType)))
-            {
-                <option value="@role">@role.ToString()</option>
-            }
-        </InputSelect>
-        <ValidationMessage For="@(() => user.Role)" />
+    <div class="mt-4 d-flex gap-2">
+        <button type="submit" class="btn btn-primary btn-sm">Gửi</button>
+        <button type="button" class="btn btn-secondary btn-sm" @onclick="() => Navigation.NavigateTo(backUrl)">Huỷ</button>
     </div>
-
-    <div class="mb-3">
-        <label for="position">Position:</label>
-        <InputSelect id="position" class="form-control" @bind-Value="user.Position">
-            @foreach (PositionType position in Enum.GetValues(typeof(PositionType)))
-            {
-                <option value="@position">@position.ToString()</option>
-            }
-        </InputSelect>
-        <ValidationMessage For="@(() => user.Position)" />
-    </div>
-
-    <div class="mb-3">
-        <label for="onboardDate">Onboard Date:</label>
-        <InputDate id="onboardDate" @bind-Value="user.OnboardDate" class="form-control" />
-        <ValidationMessage For="@(() => user.OnboardDate)" />
-    </div>
-
-    <div class="mb-3">
-        <label for="salary">Basic Salary:</label>
-        <InputNumber id="salary" @bind-Value="user.BasicSalary" class="form-control" />
-        <ValidationMessage For="@(() => user.BasicSalary)" />
-    </div>
-
-    <button type="submit" class="btn btn-primary">Gửi</button>
-    <button type="button" class="btn btn-secondary" @onclick="() => Navigation.NavigateTo(backUrl)">Huỷ</button>
-
 </EditForm>
 
 <PopupNotification @ref="notificationModal" Title="Notification" />
+
 
 @code {
     private CreateUserDto user = new();
