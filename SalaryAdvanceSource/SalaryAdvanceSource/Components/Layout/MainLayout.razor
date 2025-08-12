@@ -1,13 +1,25 @@
 ﻿@inherits LayoutComponentBase
 
+@inject AuthenticationStateProvider AuthStateProvider
+@inject ILoginService LoginService
+@inject UserState UserState
+@inject NavigationManager Navigation
+
 <div class="page">
     <div class="sidebar">
         <NavMenu />
     </div>
 
     <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+        <div class="top-row px-4 user-info">
+            <NavLink class="user-link" href="/profile">
+                <span class="user-name">
+                    @(UserState.CurrentUser != null ? UserState.CurrentUser.FullName : "Guest")
+                </span>
+                <span class="user-icon">
+                    <i class="bi bi-person-fill"></i>
+                </span>
+            </NavLink>
         </div>
 
         <article class="content px-4">
@@ -21,3 +33,54 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var username = authState.User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value;
+
+        if (!string.IsNullOrEmpty(username))
+        {
+            UserState.CurrentUser = await LoginService.GetUserByUsernameAsync(username);
+        }
+        else
+        {
+            // Nếu không ở /login thì redirect về /login
+            var currentUrl = Navigation.Uri.ToLower();
+            if (!currentUrl.EndsWith("/login"))
+            {
+                Navigation.NavigateTo("/login", true);
+            }
+        }
+    }
+}
+
+
+<style>
+    .user-info {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
+
+    .user-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+        color: #333; /* màu chữ */
+        font-size: 1rem;
+    }
+
+        .user-link:hover {
+            text-decoration: none;
+            color: #000;
+        }
+
+    .user-icon {
+        font-size: 1.5rem;
+        color: #f4b400; /* vàng như trong ảnh */
+        line-height: 1;
+    }
+</style>

@@ -1,42 +1,124 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">SalaryAdvanceSource</a>
+﻿
+@* NavMenu.razor (hoặc file tương ứng) *@
+<aside class="sidebar-container">
+    <div class="top-row ps-3 navbar navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="">SalaryAdvanceSource</a>
+        </div>
     </div>
-</div>
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+    <input type="checkbox" title="Navigation menu" class="navbar-toggler" />
 
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
+    <!-- Phần menu có thể cuộn -->
+    <div class="menu-scroll" onclick="document.querySelector('.navbar-toggler').click()">
+        <nav class="nav-list">
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                    <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+                </NavLink>
+            </div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="employees-management">
+                    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Employees
+                </NavLink>
+            </div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
-        </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="limits-management">
+                    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Limits
+                </NavLink>
+            </div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="employees-management">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Employees
-            </NavLink>
-        </div>
+            @* thêm các item khác ở đây *@
+        </nav>
+    </div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="limits-management">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Limits
-            </NavLink>
-        </div>
-    </nav>
-</div>
+    <!-- Footer luôn ở đáy -->
+    <div class="sidebar-footer px-3">
+        <NavLink class="nav-link logout-link" href="logout">
+            <span class="bi bi-box-arrow-right" aria-hidden="true"></span> Logout
+        </NavLink>
+    </div>
+</aside>
+
+<style>
+    /* Container chính của sidebar */
+    .sidebar-container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh; /* chiếm toàn bộ chiều cao viewport */
+        width: 240px; /* thay đổi width theo layout của bạn */
+        background: linear-gradient(180deg,#0b2a66,#3a1044); /* giữ gradient nếu cần */
+        color: #fff;
+    }
+
+    /* Top header (brand) */
+    .top-row.navbar {
+        flex: 0 0 auto;
+        padding: 1rem;
+    }
+
+    /* Menu (có thể cuộn) */
+    .menu-scroll {
+        flex: 1 1 auto; /* chiếm phần còn lại */
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* bên trong menu */
+    .nav-list {
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* các mục menu */
+    .nav-item {
+        padding-top: .5rem;
+        padding-bottom: .5rem;
+    }
+
+    /* style link */
+    .nav-link {
+        color: rgba(255,255,255,0.9);
+        display: inline-flex;
+        align-items: center;
+        gap: .6rem;
+        text-decoration: none;
+    }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255,255,255,0.06);
+            border-radius: 6px;
+        }
+
+    /* Footer (luôn dính đáy) */
+    .sidebar-footer {
+        flex: 0 0 auto;
+        padding: 12px 16px;
+        border-top: 1px solid rgba(255,255,255,0.04);
+        background: rgba(0,0,0,0.02); /* nếu muốn tách biệt */
+    }
+
+    /* logout link nổi bật */
+    /* logout link nổi bật */
+    .logout-link {
+        color: #fff;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: .6rem;
+        width: 100%; /* để nền hover phủ hết chiều ngang */
+        padding: .5rem .75rem;
+        border-radius: 6px;
+        text-decoration: none;
+    }
+
+        .logout-link:hover,
+        .logout-link.active {
+            background: rgba(255,255,255,0.06); /* giống hover nav-link */
+            color: #fff; /* vẫn giữ màu trắng chữ */
+        }
+
+</style>
 
