@@ -15,6 +15,6 @@ namespace SalaryAdvanceSource.DTOs
         public RoleType Role { get; set; }
         public string? Job { get; set; }
         public DateTime CreatedAt { get; set; }
-        public bool IsActive { get; set; }
+        public ActiveStatus IsActive { get; set; }
     }
 }
