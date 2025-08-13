@@ -35,25 +35,25 @@
 </div>
 
 @code {
-    protected override async Task OnInitializedAsync()
-    {
-        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
-        var username = authState.User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value;
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+    //     var username = authState.User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value;
 
-        if (!string.IsNullOrEmpty(username))
-        {
-            UserState.CurrentUser = await LoginService.GetUserByUsernameAsync(username);
-        }
-        else
-        {
-            // Nếu không ở /login thì redirect về /login
-            var currentUrl = Navigation.Uri.ToLower();
-            if (!currentUrl.EndsWith("/login"))
-            {
-                Navigation.NavigateTo("/login", true);
-            }
-        }
-    }
+    //     if (!string.IsNullOrEmpty(username))
+    //     {
+    //         UserState.CurrentUser = await LoginService.GetUserByUsernameAsync(username);
+    //     }
+    //     else
+    //     {
+        
+    //         var currentUrl = Navigation.Uri.ToLower();
+    //         if (!currentUrl.EndsWith("/login"))
+    //         {
+    //             Navigation.NavigateTo("/login", true);
+    //         }
+    //     }
+    // }
 }
 
 

@@ -9,11 +9,11 @@ namespace SalaryAdvanceSource.DTOs
         public string FullName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
-        public Guid DepartmentId { get; set; }
+        public string? DepartmentName { get; set; }
         public Guid ManagerId { get; set; }
         public GenderType Gender { get; set; }
         public RoleType Role { get; set; }
-        public PositionType Position { get; set; }
+        public string? Job { get; set; }
         public DateTime CreatedAt { get; set; }
         public bool IsActive { get; set; }
     }

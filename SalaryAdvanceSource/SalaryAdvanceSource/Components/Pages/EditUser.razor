@@ -4,7 +4,7 @@
 @using SalaryAdvanceSource.DTOs
 @using SalaryAdvanceSource.Models
 @using SalaryAdvanceSource.Services
-@inject IDepartmentsService DepartmentsService
+@inject IInformation Information
 @inject IEmployeesService EmployeesService
 @rendermode InteractiveServer
 @inject NavigationManager Navigation
@@ -24,14 +24,20 @@
 
         <div class="col-md-6">
             <label for="departmentId" class="form-label">Department</label>
-            <InputSelect id="departmentId" @bind-Value="user.DepartmentId" class="form-select form-select-sm" disabled>
+            <InputSelect id="departmentId"
+                         @bind-Value="user.DepartmentName"
+                         class="form-select form-select-sm"
+                         @onchange="OnDepartmentChanged">
                 <option value="">--Chọn phòng ban--</option>
-                @foreach (var dep in listDepartments)
+                @if (listDepartments != null)
                 {
-                    <option value="@dep.DepartmentId">@dep.DepartmentName</option>
+                    @foreach (var dep in listDepartments)
+                    {
+                        <option value="@dep.Key">@dep.Description</option>
+                    }
                 }
             </InputSelect>
-            <ValidationMessage For="@(() => user.DepartmentId)" class="text-danger small" />
+            <ValidationMessage For="@(() => user.DepartmentName)" class="text-danger small" />
         </div>
 
         <div class="col-md-6">
@@ -93,13 +99,19 @@
 
         <div class="col-md-6">
             <label for="position" class="form-label">Position</label>
-            <InputSelect id="position" class="form-select form-select-sm" @bind-Value="user.Position">
-                @foreach (PositionType position in Enum.GetValues(typeof(PositionType)))
+            <InputSelect id="position"
+                         @bind-Value="user.Job"
+                         class="form-select form-select-sm">
+                <option value="">--Chọn vị trí--</option>
+                @if (listPositions != null)
                 {
-                    <option value="@position">@position</option>
+                    @foreach (var pos in listPositions)
+                    {
+                        <option value="@pos.Key">@pos.Description</option>
+                    }
                 }
             </InputSelect>
-            <ValidationMessage For="@(() => user.Position)" class="text-danger small" />
+            <ValidationMessage For="@(() => user.Job)" class="text-danger small" />
         </div>
 
         <div class="col-md-6">
@@ -147,13 +159,14 @@
     [Parameter]
     public Guid id { get; set; }
 
-    private CreateUserDto user = new();
-    private List<GetDepartmentDto> listDepartments = new();
+    private CreateUserDto user = new(); 
+    private List<GetInfo> listDepartments = new();
+    private List<GetInfo> listPositions = new();
     private string backUrl = "/employees-management";
 
     protected override async Task OnInitializedAsync()
     {
-        await GetListDepartments();
+        await LoadDepartments();
         await LoadUser();
         formattedSalary = string.Format(
             new System.Globalization.CultureInfo("vi-VN"),
@@ -162,15 +175,46 @@
         );
     }
 
-    private async Task GetListDepartments()
+
+    private async Task LoadDepartments()
     {
         try
         {
-            listDepartments = await DepartmentsService.GetAllDepartmentAsync();
+            listDepartments = await Information.GetListInfo("POS");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error while querying departments: {ex.Message}");
+            Console.WriteLine($"Error loading departments: {ex.Message}");
+            // notificationModal.Show("Không thể tải danh sách phòng ban.");
+        }
+    }
+
+    private async Task OnDepartmentChanged(ChangeEventArgs e)
+    {
+        var departmentKey = e.Value?.ToString();
+        user.DepartmentName = departmentKey!;
+
+        if (!string.IsNullOrEmpty(departmentKey))
+        {
+            await LoadPositions(departmentKey);
+        }
+        else
+        {
+            listPositions.Clear();
+            user.Job = null!;
+        }
+    }
+
+    private async Task LoadPositions(string departmentKey)
+    {
+        try
+        {
+            listPositions = await Information.GetListInfo(departmentKey);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading positions: {ex.Message}");
+            // notificationModal.Show("Không thể tải danh sách vị trí.");
         }
     }
 

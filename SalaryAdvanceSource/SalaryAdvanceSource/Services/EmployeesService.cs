@@ -32,7 +32,7 @@ namespace SalaryAdvanceSource.Services
                 .FirstOrDefaultAsync(u => u.UserId == managerId);
             return _mapper.Map<GetUserDto>(manager);
         }
-        public async Task CreateUserAsync(CreateUserDto userDto)
+        public async Task CreateUserAsync(CreateUserDto userDto, string password)
         {
             var authState = await _authStateProvider.GetAuthenticationStateAsync();
             var userId = authState.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
@@ -44,7 +44,7 @@ namespace SalaryAdvanceSource.Services
             userDto.DateOfBirth = DateTime.SpecifyKind(userDto.DateOfBirth, DateTimeKind.Utc);
             userDto.OnboardDate = DateTime.SpecifyKind(userDto.OnboardDate, DateTimeKind.Utc);
 
-            var user = new Users(userDto.UserName, userDto.Password, Guid.Parse(userId!));
+            var user = new Users(userDto.UserName, password, Guid.Parse("550e8400-e29b-41d4-a716-446655440000"));
 
             user.SetFullName(userDto.FullName);
             user.SetEmail(userDto.Email);
@@ -53,14 +53,12 @@ namespace SalaryAdvanceSource.Services
             user.SetDateOfBirth(userDto.DateOfBirth);
             user.SetGender(userDto.Gender);
             user.SetRole(userDto.Role);
-            user.SetPosition(userDto.Position);
-            user.SetDepartmentId(userDto.DepartmentId);
-            var department = await _context.Departments
-                .FirstOrDefaultAsync(u => u.DepartmentId == userDto.DepartmentId);
-            user.SetManagerId(department!.ManagerId);
+            user.SetJob(userDto.Job);
+            user.SetDepartmentName(userDto.DepartmentName);
+            user.SetManagerId(userDto.ManagerId);
             user.SetOnboardDate(userDto.OnboardDate);
             user.SetBasicSalary(userDto.BasicSalary);
-            user.SetIsActive(true);
+            user.SetIsActive(userDto.IsActive);
 
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
@@ -81,11 +79,9 @@ namespace SalaryAdvanceSource.Services
                 throw new Exception("User doesn't exist");
 
             user.SetRole(userUpdate.Role);
-            user.SetPosition(userUpdate.Position);
-            user.SetDepartmentId(userUpdate.DepartmentId);
-            var department = await _context.Departments
-                .FirstOrDefaultAsync(d => d.DepartmentId == userUpdate.DepartmentId);
-            user.SetManagerId(department!.ManagerId);
+            user.SetJob(userUpdate.Job);
+            user.SetDepartmentName(userUpdate.DepartmentName);
+            user.SetManagerId(userUpdate.ManagerId);
             user.SetOnboardDate(userUpdate.OnboardDate);
             user.SetBasicSalary(userUpdate.BasicSalary);
             user.SetIsActive(userUpdate.IsActive);
@@ -120,10 +116,10 @@ namespace SalaryAdvanceSource.Services
                 TotalCount = filteredQuery.TotalCount
             };
         }
-        public async Task<List<GetUserDto>> GetListManager()
+        public async Task<List<GetUserDto>> GetListManagerByDep(string groupCode)
         {
             var managers = await _context.Users
-                .Where(u => u.Role == RoleType.Manager)
+                .Where(u => u.Role == RoleType.Manager && u.DepartmentName == groupCode)
                 .ToListAsync();
             return _mapper.Map<List<GetUserDto>>(managers);
         }

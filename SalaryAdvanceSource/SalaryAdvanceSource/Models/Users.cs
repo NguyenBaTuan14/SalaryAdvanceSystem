@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using SalaryAdvanceSource.Utils;
 
 namespace SalaryAdvanceSource.Models
 {
@@ -15,16 +16,12 @@ namespace SalaryAdvanceSource.Models
         Employee = 0,
         Manager = 1,
     }
-
-    public enum PositionType
+    public enum ActiveStatus
     {
-        Unknown = 0,
-        Developer = 1,
-        Designer = 2,
-        Tester = 3,
-        Manager = 4,
-        HR = 5,
-        Sales = 6,
+        Onboard = 0,
+        Offline = 1,
+        Online = 2,
+        Orther = 3
     }
 
     public class Users
@@ -33,8 +30,9 @@ namespace SalaryAdvanceSource.Models
         [Key]
         public Guid UserId { get; private set; } = Guid.NewGuid();
         public string UserName { get; private set; } = string.Empty;
-        public string Password { get; private set; } = string.Empty;
-        public Guid DepartmentId { get; private set; }
+        public string Hash { get; private set; } = string.Empty;
+        public string Salt { get; private set; } = string.Empty;
+        public string DepartmentName { get; private set; } = string.Empty;
         public Guid ManagerId { get; private set; }
         public string FullName { get; private set; } = string.Empty;
         public string Email { get; private set; } = string.Empty;
@@ -43,12 +41,13 @@ namespace SalaryAdvanceSource.Models
         public DateTime DateOfBirth { get; private set; }
         public GenderType Gender { get; private set; }
         public RoleType Role { get; private set; }
-        public PositionType Position { get; private set; }
+        public string Job { get; private set; } = string.Empty;
         public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
         public Guid CreatedUserId { get; private set; }
         public DateTime OnboardDate { get; private set; }
         public decimal BasicSalary { get; private set; }
-        public bool IsActive { get; private set; } = true;
+        public ActiveStatus IsActive { get; private set; }
+        public string AvatarPath { get; set; } = string.Empty;
 
         // ====== Constructors ======
         private Users() { }
@@ -69,18 +68,20 @@ namespace SalaryAdvanceSource.Models
         {
             if (string.IsNullOrWhiteSpace(password))
                 throw new ArgumentException("Password cannot be null or empty.", nameof(password));
-            Password = BCrypt.Net.BCrypt.HashPassword(password);
+            var (hash, salt) = PasswordHasher.HashPassword(password);
+
+            Hash = hash;
+            Salt = salt;
         }
-        public void SetDepartmentId(Guid departmentId)
+
+        public void SetDepartmentName(string departmentName)
         {
-            if (departmentId == Guid.Empty)
-                throw new ArgumentException("Department ID cannot be empty.", nameof(departmentId));
-            DepartmentId = departmentId;
+            if (departmentName == String.Empty)
+                throw new ArgumentException("Department ID cannot be empty.", nameof(departmentName));
+            DepartmentName = departmentName;
         }
         public void SetManagerId(Guid managerId)
         {
-            if (managerId == Guid.Empty)
-                throw new ArgumentException("Manager ID cannot be empty.", nameof(managerId));
             ManagerId = managerId;
         }
         public void SetFullName(string fullName)
@@ -125,11 +126,11 @@ namespace SalaryAdvanceSource.Models
                 throw new ArgumentException("User role not specified", nameof(role));
             Role = role;
         }
-        public void SetPosition(PositionType position)
+        public void SetJob(string job)
         {
-            if (!Enum.IsDefined(typeof(PositionType), position))
-                throw new ArgumentException("Position type not specified", nameof(position));
-            Position = position;
+            if (string.IsNullOrWhiteSpace(job))
+                throw new ArgumentException("Position type not specified", nameof(job));
+            Job = job;
         }
         public void SetOnboardDate(DateTime onboardDate)
         {
@@ -143,6 +144,6 @@ namespace SalaryAdvanceSource.Models
                 throw new ArgumentException("Basic salary cannot be negative.", nameof(basicSalary));
             BasicSalary = basicSalary;
         }
-        public void SetIsActive(bool isActive) => IsActive = isActive;
+        public void SetIsActive(ActiveStatus isActive) => IsActive = isActive;
     }
 }
