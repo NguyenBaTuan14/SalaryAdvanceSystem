@@ -47,7 +47,7 @@ namespace SalaryAdvanceSource.Models
         public DateTime OnboardDate { get; private set; }
         public decimal BasicSalary { get; private set; }
         public ActiveStatus IsActive { get; private set; }
-        public string AvatarPath { get; set; } = string.Empty;
+        public string AvatarPath { get; private set; } = string.Empty;
 
         // ====== Constructors ======
         private Users() { }
@@ -145,5 +145,7 @@ namespace SalaryAdvanceSource.Models
             BasicSalary = basicSalary;
         }
         public void SetIsActive(ActiveStatus isActive) => IsActive = isActive;
+        public void SetAvatarPath(string avatarPath) => AvatarPath = avatarPath;
     }
 }
+

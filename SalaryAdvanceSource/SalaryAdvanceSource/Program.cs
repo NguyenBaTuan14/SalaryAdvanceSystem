@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.EntityFrameworkCore;
 using SalaryAdvanceSource.Components;
 using SalaryAdvanceSource.Data;
 using SalaryAdvanceSource.Mapping;
 using SalaryAdvanceSource.Services;
-using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,6 +45,18 @@ builder.Services.AddSingleton<UserState>();
 builder.Services.AddScoped<IDepartmentsService, DepartmentsService>();
 builder.Services.AddScoped<ISalaryLimitService, SalaryLimitService>();
 builder.Services.AddScoped<IInformation, Information>();
+
+
+// Cho phép Blazor Server nhận dữ liệu lớn hơn (ví dụ 15MB)
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 50 * 1024 * 1024; // 50MB
+});
+
+builder.Services.AddSignalR(options =>
+{
+    options.MaximumReceiveMessageSize = 50 * 1024 * 1024; // 50MB
+});
 
 var app = builder.Build();
 
