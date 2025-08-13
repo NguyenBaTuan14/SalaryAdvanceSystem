@@ -43,6 +43,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<UserState>();
 builder.Services.AddScoped<IDepartmentsService, DepartmentsService>();
 builder.Services.AddScoped<ISalaryLimitService, SalaryLimitService>();
+builder.Services.AddScoped<IInformation, Information>();
 
 var app = builder.Build();
 

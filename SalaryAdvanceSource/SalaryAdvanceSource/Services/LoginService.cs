@@ -15,11 +15,11 @@ namespace SalaryAdvanceSource.Services
 
         public async Task<Users?> GetUserByUsernameAsync(string username)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.UserName == username && u.IsActive);
+            return await _context.Users.FirstOrDefaultAsync(u => u.UserName == username && u.IsActive == ActiveStatus.Online);
         }
         public async Task<bool> UpdatePasswordAsync(Guid userId, string newPlainPassword)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId && u.IsActive);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId && u.IsActive == ActiveStatus.Offline);
             if (user == null)
                 return false;
 

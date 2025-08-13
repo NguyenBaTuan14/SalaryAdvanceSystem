@@ -6,11 +6,11 @@ namespace SalaryAdvanceSource.Services
     {
         Task<List<GetUserDto>> GetAllUsersAsync();
         Task<GetUserDto> GetManagerAsync(Guid managerId);
-        Task CreateUserAsync(CreateUserDto userDto);
+        Task CreateUserAsync(CreateUserDto userDto, string password);
         Task<CreateUserDto> GetUserByIdAsync(Guid userId);
         Task UpdateUserAsync(CreateUserDto userUpdate, Guid id);
         Task DeleteUserAsync(Guid userId);
         Task<PagedResultDto<GetUserDto>> GetUsersAsync(PagedRequestDto request);
-        Task<List<GetUserDto>> GetListManager();
+        Task<List<GetUserDto>> GetListManagerByDep(string groupCode);
     }
 }

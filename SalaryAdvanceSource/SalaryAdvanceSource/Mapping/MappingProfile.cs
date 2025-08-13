@@ -11,6 +11,7 @@ namespace SalaryAdvanceSource.Mapping
             CreateMap<Users, GetUserDto>();
             CreateMap<Departments, GetDepartmentDto>();
             CreateMap<Users, CreateUserDto>();
+            CreateMap<Information, GetInfo>();
         }
     }
 }

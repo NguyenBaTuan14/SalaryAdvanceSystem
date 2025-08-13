@@ -5,7 +5,7 @@
 @using SalaryAdvanceSource.Exceptions
 @using SalaryAdvanceSource.Models
 @using SalaryAdvanceSource.Services
-@inject IDepartmentsService DepartmentsService
+@inject IInformation Information
 @inject IEmployeesService EmployeesService
 @rendermode InteractiveServer
 @inject NavigationManager Navigation
@@ -25,20 +25,40 @@
 
         <div class="col-md-6">
             <label for="password" class="form-label">Password</label>
-            <InputText id="password" @bind-Value="user.Password" type="password" class="form-control form-control-sm" />
-            <ValidationMessage For="@(() => user.Password)" class="text-danger small" />
+            <InputText id="password" @bind-Value="password" type="password" class="form-control form-control-sm" />
+            <ValidationMessage For="@(() => password)" class="text-danger small" />
         </div>
 
         <div class="col-md-6">
-            <label for="departmentId" class="form-label">Department</label>
-            <InputSelect id="departmentId" @bind-Value="user.DepartmentId" class="form-select form-select-sm">
+            <label for="departmentName" class="form-label">Department</label>
+            <InputSelect id="departmentName"
+                         @bind-Value="SelectedDepartment"
+                         class="form-select form-select-sm">
                 <option value="">--Chọn phòng ban--</option>
-                @foreach (var dep in listDepartments)
+                @if (listDepartments != null)
                 {
-                    <option value="@dep.DepartmentId">@dep.DepartmentName</option>
+                    @foreach (var dep in listDepartments)
+                    {
+                        <option value="@dep.Key">@dep.Description</option>
+                    }
                 }
             </InputSelect>
-            <ValidationMessage For="@(() => user.DepartmentId)" class="text-danger small" />
+            <ValidationMessage For="@(() => SelectedDepartment)" class="text-danger small" />
+        </div>
+
+        <div class="col-md-6">
+            <label for="manager" class="form-label">Manager</label>
+            <InputSelect id="manager" class="form-select form-select-sm" @bind-Value="selectedManager">
+                <option value="">--Chọn quản lý--</option>
+                @if (listManager != null)
+                {
+                    @foreach (var m in listManager)
+                    {
+                        <option value="@m.ManagerId">@m.FullName</option>
+                    }
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => selectedManager)" class="text-danger small" />
         </div>
 
         <div class="col-md-6">
@@ -99,14 +119,18 @@
         </div>
 
         <div class="col-md-6">
-            <label for="position" class="form-label">Position</label>
-            <InputSelect id="position" class="form-select form-select-sm" @bind-Value="user.Position">
-                @foreach (PositionType position in Enum.GetValues(typeof(PositionType)))
+            <label for="job" class="form-label">Job</label>
+            <InputSelect id="job" class="form-select form-select-sm" @bind-Value="user.Job">
+                <option value="">--Chọn vị trí--</option>
+                @if (listJobs != null)
                 {
-                    <option value="@position">@position</option>
+                    @foreach (var pos in listJobs)
+                    {
+                        <option value="@pos.Key">@pos.Description</option>
+                    }
                 }
             </InputSelect>
-            <ValidationMessage For="@(() => user.Position)" class="text-danger small" />
+            <ValidationMessage For="@(() => user.Job)" class="text-danger small" />
         </div>
 
         <div class="col-md-6">
@@ -137,8 +161,27 @@
 <PopupNotification @ref="notificationModal" Title="Notification" />
 
 @code {
-    private CreateUserDto user = new();
-    private List<GetDepartmentDto> listDepartments = new();
+    private CreateUserDto user = new(); 
+    private string password = string.Empty;
+
+    // private string selectedJob = string.Empty;
+    private List<GetInfo> listJobs = new();
+
+    private string? selectedManager;
+    private List<GetUserDto> listManager = new();
+
+    private string? _selectedDepartment;
+    private string SelectedDepartment
+    {
+        get => _selectedDepartment!;
+        set
+        {
+            _selectedDepartment = value;
+            user.DepartmentName = value;
+            _ =  OnDepartmentChanged(value);
+        }
+    }
+    private List<GetInfo> listDepartments = new();
     private PopupNotification notificationModal = null!;
     private string backUrl = "/employees-management";
 
@@ -151,11 +194,40 @@
     {
         try
         {
-            listDepartments = await DepartmentsService.GetAllDepartmentAsync();
+            listDepartments = await Information.GetListInfo("POS");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error while querying Database: {ex.Message}");
+            notificationModal.Show("Failed to load departments. Please try again later.");
+        }
+    }
+
+    private async Task OnDepartmentChanged(string departmentKey)
+    {
+        Console.WriteLine($"Selected Department: {departmentKey}");
+
+        if (!string.IsNullOrEmpty(departmentKey))
+        {
+            try
+            {
+                listJobs = await Information.GetListInfo(departmentKey);
+                listManager = await EmployeesService.GetListManagerByDep(departmentKey);
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error while loading job and manager: {ex.Message}");
+                notificationModal.Show("Failed to load positions. Please try again later.");
+            }
+        }
+        else
+        {
+            listJobs.Clear();
+            // selectedJob = null!;
+            listManager.Clear();
+            selectedManager = null;
+
         }
     }
 
@@ -183,7 +255,7 @@
     {
         try
         {
-            await EmployeesService.CreateUserAsync(user);
+            await EmployeesService.CreateUserAsync(user, password);
             Navigation.NavigateTo("/employees-management");
         }
         catch (BusinessException ex)

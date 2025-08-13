@@ -9,10 +9,12 @@ namespace SalaryAdvanceSource.DTOs
         [MaxLength(100, ErrorMessage = "Username cannot exceed 100 characters")]
         public string UserName { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Please enter password")]
-        public string Password { get; set; } = string.Empty;
-        
-        public Guid DepartmentId { get; set; }
+        public string Hash { get; private set; } = string.Empty;
+        public string Salt { get; private set; } = string.Empty;
+
+        public string DepartmentName { get; set; } = string.Empty;
+
+        public Guid ManagerId { get; set; }
 
         [Required(ErrorMessage = "Please enter full name")]
         [MaxLength(150, ErrorMessage = "Full name cannot exceed 150 characters")]
@@ -38,8 +40,8 @@ namespace SalaryAdvanceSource.DTOs
         [Required(ErrorMessage = "Please select role")]
         public RoleType Role { get; set; } = RoleType.Employee;
 
-        [Required(ErrorMessage = "Please select position")]
-        public PositionType Position { get; set; } = PositionType.Unknown;
+        [Required(ErrorMessage = "Please select job")]
+        public string Job { get; set; } = string.Empty;
 
         public DateTime OnboardDate { get; set; } = DateTime.UtcNow;
 
@@ -47,7 +49,7 @@ namespace SalaryAdvanceSource.DTOs
         [Range(0.01, double.MaxValue, ErrorMessage = "Basic salary must be greater than 0")]
         public decimal BasicSalary { get; set; } = 0;
 
-        public bool IsActive { get; set; } = true;
+        public ActiveStatus IsActive { get; set; } = ActiveStatus.Online;
     }
 
 }
