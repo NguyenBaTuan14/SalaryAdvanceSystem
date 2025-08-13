@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using SalaryAdvanceSource.Models;
 using System.Security.Claims;
+using SalaryAdvanceSource.Utils;
 
 namespace SalaryAdvanceSource.Services
 {
@@ -16,23 +17,23 @@ namespace SalaryAdvanceSource.Services
 
         public async Task<bool> LoginAsync(string username, string password, HttpContext httpContext)
         {
-            //var user = await _loginService.GetUserByUsernameAsync(username);
+            var user = await _loginService.GetUserByUsernameAsync(username);
 
-            //if (user != null && BCrypt.Net.BCrypt.Verify(password, user.Password))
-            //{
-            //    var claims = new List<Claim>
-            //    {
-            //        new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-            //        new Claim(ClaimTypes.Name, user.UserName),
-            //        new Claim(ClaimTypes.Role, user.Role.ToString())
-            //    };
+            if (user != null && PasswordHasher.VerifyPassword(password, user.Hash, user.Salt))
+            {
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(ClaimTypes.Role, user.Role.ToString())
+                };
 
-            //    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            //    var principal = new ClaimsPrincipal(identity);
+                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var principal = new ClaimsPrincipal(identity);
 
-            //    await httpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-            //    return true;
-            //}
+                await httpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+                return true;
+            }
             return false;
         }
 
