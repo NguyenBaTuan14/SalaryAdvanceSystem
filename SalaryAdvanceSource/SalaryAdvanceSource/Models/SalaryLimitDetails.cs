@@ -17,7 +17,7 @@ namespace SalaryAdvanceSource.Models
     {
         // ====== Properties ======
         [Key]
-        public Guid LimitDetailId { get; private set; }
+        public Guid LimitDetailId { get; private set; } = Guid.NewGuid();
         public Guid LimitId { get; private set; }
         public PriorityType Priority { get; private set; }
         public int TimeLimit { get; private set; } = 0;
@@ -30,8 +30,14 @@ namespace SalaryAdvanceSource.Models
         private SalaryLimitDetails() { }
         public SalaryLimitDetails(Guid limitId, PriorityType priority, int timeLimit, AmountLimitType amountLimitType, decimal amountLimitValue)
         {
-            LimitDetailId = Guid.NewGuid();
             LimitId = limitId;
+            Priority = priority;
+            TimeLimit = timeLimit;
+            AmountLimitType = amountLimitType;
+            AmountLimitValue = amountLimitValue;
+        }
+        public void Update(PriorityType priority, int timeLimit, AmountLimitType amountLimitType, decimal amountLimitValue)
+        {
             Priority = priority;
             TimeLimit = timeLimit;
             AmountLimitType = amountLimitType;

@@ -11,7 +11,7 @@ namespace SalaryAdvanceSource.Models
     {
         // ====== Properties ======
         [Key]
-        public Guid LimitId { get; private set; }
+        public Guid LimitId { get; private set; } = Guid.NewGuid();
         public string LimitName { get; private set; } = string.Empty;
         public string Description { get; private set; } = string.Empty;
         public Guid CreatedUserId { get; private set; }
@@ -30,7 +30,6 @@ namespace SalaryAdvanceSource.Models
         private SalaryLimits() { }
         public SalaryLimits(string limitName, string description, Guid createdUserId, DateTime startTime, DateTime endTime, ObjectType objectType, Guid objectId, bool isGroup = false)
         {
-            LimitId = Guid.NewGuid();
             SetLimitName(limitName);
             SetDescription(description);
             CreatedUserId = createdUserId;
@@ -53,5 +52,18 @@ namespace SalaryAdvanceSource.Models
                 throw new ArgumentException("Description cannot be empty.", nameof(description));
             Description = description;
         }
+        public void Update(string limitName, string description, Guid modifiedUserId, DateTime startTime, DateTime endTime, ObjectType objectType, Guid objectId, bool isGroup)
+        {
+            SetLimitName(limitName);
+            SetDescription(description);
+            ModifiedUserId = modifiedUserId;
+            ModifiedAt = DateTime.UtcNow;
+            StartTime = startTime;
+            EndTime = endTime;
+            ObjectType = objectType;
+            ObjectId = objectId;
+            IsGroup = isGroup;
+        }
+
     }
 }
