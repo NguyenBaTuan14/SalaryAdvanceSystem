@@ -110,7 +110,13 @@
 
         <div class="col-md-6">
             <label for="salary" class="form-label">Basic Salary</label>
-            <InputNumber id="salary" @bind-Value="user.BasicSalary" class="form-control form-control-sm" />
+            <div class="input-group input-group-sm">
+                <input id="salary"
+                       class="form-control"
+                       value="@formattedSalary"
+                       @oninput="OnSalaryInput" />
+                <span class="input-group-text">₫</span>
+            </div>
             <ValidationMessage For="@(() => user.BasicSalary)" class="text-danger small" />
         </div>
 
@@ -149,6 +155,11 @@
     {
         await GetListDepartments();
         await LoadUser();
+        formattedSalary = string.Format(
+            new System.Globalization.CultureInfo("vi-VN"),
+            "{0:N0}",
+            user.BasicSalary
+        );
     }
 
     private async Task GetListDepartments()
@@ -172,6 +183,26 @@
         catch (Exception ex)
         {
             Console.WriteLine($"Error while loading user: {ex.Message}");
+        }
+    }
+
+    private string formattedSalary = "";
+
+    private void OnSalaryInput(ChangeEventArgs e)
+    {
+        var input = e.Value?.ToString() ?? "";
+
+        var digitsOnly = new string(input.Where(char.IsDigit).ToArray());
+
+        if (decimal.TryParse(digitsOnly, out var value))
+        {
+            user.BasicSalary = value;
+            formattedSalary = string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0}", value);
+        }
+        else
+        {
+            user.BasicSalary = 0;
+            formattedSalary = "";
         }
     }
 

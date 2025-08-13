@@ -1,7 +1,190 @@
 ﻿@page "/limits-management/add-new-limit"
+@inject IDepartmentsService DepartmentsService
+@inject IEmployeesService EmployeesService
+@rendermode InteractiveServer
+@inject NavigationManager Navigation
 
-<h3>AddLimit</h3>
+<h3 class="mb-4">Add New Limit</h3>
+
+<EditForm Model="@limit" OnValidSubmit="HandleValidSubmit" class="p-3 border rounded bg-light">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label class="form-label">Limit Name</label>
+            <InputText @bind-Value="limit.LimitName" class="form-control form-control-sm" />
+            <ValidationMessage For="@(() => limit.LimitName)" class="text-danger small" />
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Description</label>
+            <InputText @bind-Value="limit.Description" class="form-control form-control-sm" />
+            <ValidationMessage For="@(() => limit.Description)" class="text-danger small" />
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Start Time</label>
+            <InputDate @bind-Value="limit.StartTime" class="form-control form-control-sm" />
+            <ValidationMessage For="@(() => limit.StartTime)" class="text-danger small" />
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">End Time</label>
+            <InputDate @bind-Value="limit.EndTime" class="form-control form-control-sm" />
+            <ValidationMessage For="@(() => limit.EndTime)" class="text-danger small" />
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Object Type</label>
+            <InputSelect @bind-Value="limit.ObjectType" class="form-select form-select-sm" @onchange="OnObjectTypeChanged">
+                @foreach (ObjectType objType in Enum.GetValues(typeof(ObjectType)))
+                {
+                    <option value="@objType">@objType</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => limit.ObjectType)" class="text-danger small" />
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Object</label>
+            <InputSelect @bind-Value="limit.ObjectId" class="form-select form-select-sm">
+                <option value="">-- Select --</option>
+                @foreach (var obj in currentObjects)
+                {
+                    <option value="@obj.Id">@obj.Name</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => limit.ObjectId)" class="text-danger small" />
+        </div>
+
+        <div class="col-md-6 form-check mt-4">
+            <InputCheckbox @bind-Value="limit.IsGroup" class="form-check-input" />
+            <label class="form-check-label">Is Group</label>
+        </div>
+    </div>
+
+    <hr />
+
+    <h5>Limit Details</h5>
+    @for (int i = 0; i < limit.LimitDetails.Count; i++)
+    {
+        var detail = limit.LimitDetails[i];
+        <div class="border rounded p-3 mb-2">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">Priority</label>
+                    <InputSelect @bind-Value="detail.Priority" class="form-select form-select-sm">
+                        @foreach (PriorityType p in Enum.GetValues(typeof(PriorityType)))
+                        {
+                            <option value="@p">@p</option>
+                        }
+                    </InputSelect>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Time Limit</label>
+                    <InputNumber @bind-Value="detail.TimeLimit" class="form-control form-control-sm" />
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Amount Limit Type</label>
+                    <InputSelect @bind-Value="detail.AmountLimitType" class="form-select form-select-sm">
+                        @foreach (AmountLimitType amt in Enum.GetValues(typeof(AmountLimitType)))
+                        {
+                            <option value="@amt">@amt</option>
+                        }
+                    </InputSelect>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Amount Limit Value</label>
+                    <InputNumber @bind-Value="detail.AmountLimitValue" class="form-control form-control-sm" />
+                </div>
+            </div>
+            <div class="mt-2">
+                <button type="button" class="btn btn-danger btn-sm" @onclick="() => RemoveDetail(i)">Remove</button>
+            </div>
+        </div>
+    }
+
+    <button type="button" class="btn btn-secondary btn-sm mb-3" @onclick="AddDetail">Add Detail</button>
+
+    <div class="mt-4 d-flex gap-2">
+        <button type="submit" class="btn btn-primary btn-sm">Save</button>
+        <button type="button" class="btn btn-secondary btn-sm" @onclick="Cancel">Cancel</button>
+    </div>
+</EditForm>
 
 @code {
+    private CreateLimitDto limit = new CreateLimitDto();
 
+    private List<GetUserDto> empList = new();
+    private List<GetDepartmentDto> depList = new();
+    private List<SelectItem> currentObjects = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            empList = await EmployeesService.GetAllUsersAsync();
+            depList = await DepartmentsService.GetAllDepartmentAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error while querying Database: {ex.Message}");
+        }
+        OnObjectTypeChanged(null);
+    }
+
+    private void OnObjectTypeChanged(ChangeEventArgs? e)
+    {
+        if (limit.ObjectType == ObjectType.EMP)
+        {
+            currentObjects = empList
+                .Select(e => new SelectItem
+                {
+                    Id = e.UserId,
+                    Name = e.FullName 
+                })
+                .ToList();
+        }
+        else if (limit.ObjectType == ObjectType.DEP)
+        {
+            currentObjects = depList
+                .Select(d => new SelectItem
+                {
+                    Id = d.DepartmentId,
+                    Name = d.DepartmentName
+                })
+                .ToList();
+        }
+    }
+
+    private void AddDetail()
+    {
+        limit.LimitDetails.Add(new CreateLimitDetailDto());
+    }
+
+    private void RemoveDetail(int index)
+    {
+        // if (index >= 0 && index < limit.LimitDetails.Count)
+        //     limit.LimitDetails.RemoveAt(index);
+    }
+
+    private void HandleValidSubmit()
+    {
+        // save to API
+    }
+
+    private void Cancel()
+    {
+        Navigation.NavigateTo("/limits-management");
+    }
+
+    public class SelectItem
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+    }
 }

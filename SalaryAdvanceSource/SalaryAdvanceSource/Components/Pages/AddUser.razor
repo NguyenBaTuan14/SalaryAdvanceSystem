@@ -117,7 +117,13 @@
 
         <div class="col-md-6">
             <label for="salary" class="form-label">Basic Salary</label>
-            <InputNumber id="salary" @bind-Value="user.BasicSalary" class="form-control form-control-sm" />
+            <div class="input-group input-group-sm">
+                <input id="salary"
+                       class="form-control"
+                       value="@formattedSalary"
+                       @oninput="OnSalaryInput" />
+                <span class="input-group-text">₫</span>
+            </div>
             <ValidationMessage For="@(() => user.BasicSalary)" class="text-danger small" />
         </div>
     </div>
@@ -129,7 +135,6 @@
 </EditForm>
 
 <PopupNotification @ref="notificationModal" Title="Notification" />
-
 
 @code {
     private CreateUserDto user = new();
@@ -154,7 +159,27 @@
         }
     }
 
-    private async void HandleValidSubmit()
+    private string formattedSalary = "";
+
+    private void OnSalaryInput(ChangeEventArgs e)
+    {
+        var input = e.Value?.ToString() ?? "";
+
+        var digitsOnly = new string(input.Where(char.IsDigit).ToArray());
+
+        if (decimal.TryParse(digitsOnly, out var value))
+        {
+            user.BasicSalary = value;
+            formattedSalary = string.Format("{0:N0}", value);
+        }
+        else
+        {
+            user.BasicSalary = 0;
+            formattedSalary = "";
+        }
+    }
+
+    private async Task HandleValidSubmit()
     {
         try
         {

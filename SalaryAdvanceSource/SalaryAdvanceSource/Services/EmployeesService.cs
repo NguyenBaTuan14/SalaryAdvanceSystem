@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
 using SalaryAdvanceSource.Data;
 using SalaryAdvanceSource.DTOs;
 using SalaryAdvanceSource.Exceptions;
+using SalaryAdvanceSource.Extensions;
 using SalaryAdvanceSource.Models;
-
-using Microsoft.AspNetCore.Components.Authorization;
 
 namespace SalaryAdvanceSource.Services
 {
@@ -98,6 +99,33 @@ namespace SalaryAdvanceSource.Services
                 throw new BusinessException("User doesn't exist");
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
-        }   
+        }
+        public async Task<PagedResultDto<GetUserDto>> GetUsersAsync(PagedRequestDto request)
+        {
+            var query = _context.Users.AsNoTracking();
+
+            var filteredQuery = await query.ToPagedResultAsync(
+                request,
+                u => u.UserName!,
+                u => u.FullName!,
+                u => u.Email!,
+                u => u.PhoneNumber!
+            );
+
+            var dtoItems = _mapper.Map<List<GetUserDto>>(filteredQuery.Items);
+
+            return new PagedResultDto<GetUserDto>
+            {
+                Items = dtoItems,
+                TotalCount = filteredQuery.TotalCount
+            };
+        }
+        public async Task<List<GetUserDto>> GetListManager()
+        {
+            var managers = await _context.Users
+                .Where(u => u.Role == RoleType.Manager)
+                .ToListAsync();
+            return _mapper.Map<List<GetUserDto>>(managers);
+        }
     }
 }

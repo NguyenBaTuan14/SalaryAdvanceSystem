@@ -10,5 +10,7 @@ namespace SalaryAdvanceSource.Services
         Task<CreateUserDto> GetUserByIdAsync(Guid userId);
         Task UpdateUserAsync(CreateUserDto userUpdate, Guid id);
         Task DeleteUserAsync(Guid userId);
+        Task<PagedResultDto<GetUserDto>> GetUsersAsync(PagedRequestDto request);
+        Task<List<GetUserDto>> GetListManager();
     }
 }
